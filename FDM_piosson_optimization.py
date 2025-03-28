@@ -47,8 +47,14 @@ def NDM5_2D(PDE2DModel, hx, hy):
 
     F = np.zeros((M - 1) * (N - 1))
     for j in range(1, N):
-        F[(N - 1) * (j - 1) : (N - 1) * (j)] = pod.f_guassian_kernel(
-            X0[1:M], np.array([Y0[j] for i in range(N - 1)]), c1=0, c2=0, sigma=0.5
+        F[(N - 1) * (j - 1) : (N - 1) * (j)] = pod.f_guassian_kernel_diffdis(
+            X0[1:M],
+            np.array([Y0[j] for i in range(N - 1)]),
+            c1=0.5,
+            c2=0.5,
+            sigma1=0.01,
+            sigma2=1,
+            b=6,
         )
 
         F[(N - 1) * (j - 1)] -= pod.left_guassian_kernel(Y0[j]) * p
@@ -80,8 +86,8 @@ def NDM5_2D(PDE2DModel, hx, hy):
     return X, Y, U
 
 
-x = np.array([0, 2])
-y = np.array([0, 2])
+x = np.array([0, 1])
+y = np.array([0, 1])
 pde = PDE2DModel_OPT(x, y)
 
 X, Y, U = NDM5_2D(pde, 0.01, 0.01)

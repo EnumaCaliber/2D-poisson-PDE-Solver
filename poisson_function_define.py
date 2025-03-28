@@ -148,3 +148,32 @@ def down_guassian_kernel(x):
 
 def up_guassian_kernel(x):
     return 0 * x
+
+
+# define guassian kernel combine
+def f_guassian_kernel_combine(x, y, c1, c2, sigma):
+    return 3 * np.exp(((x - c1) ** 2 + (y - c2) ** 2) / sigma**2) - 1 * np.exp(
+        ((x - 1) ** 2 + (y - 2) ** 2) / 1**2
+    )
+
+
+def left_guassian_kernel_combine(y):
+    return 0 * y
+
+
+def right_guassian_kernel_combine(y):
+    return 0 * y
+
+
+def down_guassian_kernel_combine(x):
+    return 0 * x
+
+
+def up_guassian_kernel_combine(x):
+    return 0 * x
+
+
+def f_guassian_kernel_diffdis(x, y, c1, c2, sigma1, sigma2, b):
+    return b * np.exp(
+        -((x - c1) ** 2) / (2 * sigma1**2) - (y - c2) ** 2 / (2 * sigma2**2)
+    )
