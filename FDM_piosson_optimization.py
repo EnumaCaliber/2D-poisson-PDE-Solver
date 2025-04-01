@@ -25,10 +25,10 @@ def NDM5_2D(PDE2DModel, hx, hy):
     Y, X = np.meshgrid(Y0, X0)
 
     U = np.zeros((M + 1, N + 1))
-    U[0, :] = pod.left_guassian_kernel(Y0)
-    U[-1, :] = pod.right_guassian_kernel(Y0)
-    U[:, 0] = pod.down_guassian_kernel(X0)
-    U[:, -1] = pod.up_guassian_kernel(X0)
+    U[0, :] = pod.left_guassian_kernel_combine(Y0)
+    U[-1, :] = pod.right_guassian_kernel_combine(Y0)
+    U[:, 0] = pod.down_guassian_kernel_combine(X0)
+    U[:, -1] = pod.up_guassian_kernel_combine(X0)
 
     p = 1 / hx**2
     q = 1 / hy**2
@@ -42,23 +42,17 @@ def NDM5_2D(PDE2DModel, hx, hy):
             C[i][i + 1] = p
             C[i + 1][i] = p
 
-    u0 = np.array([[pod.down_guassian_kernel(X0[i])] for i in range(1, M)])
-    un = np.array([[pod.up_guassian_kernel(X0[i])] for i in range(1, M)])
+    u0 = np.array([[pod.down_guassian_kernel_combine(X0[i])] for i in range(1, M)])
+    un = np.array([[pod.up_guassian_kernel_combine(X0[i])] for i in range(1, M)])
 
     F = np.zeros((M - 1) * (N - 1))
     for j in range(1, N):
-        F[(N - 1) * (j - 1) : (N - 1) * (j)] = pod.f_guassian_kernel_diffdis(
-            X0[1:M],
-            np.array([Y0[j] for i in range(N - 1)]),
-            c1=0.5,
-            c2=0.5,
-            sigma1=0.01,
-            sigma2=1,
-            b=6,
+        F[(N - 1) * (j - 1) : (N - 1) * (j)] = pod.f_guassian_kernel_combine_2(
+            X0[1:M], np.array([Y0[j] for i in range(N - 1)])
         )
 
-        F[(N - 1) * (j - 1)] -= pod.left_guassian_kernel(Y0[j]) * p
-        F[(N - 1) * (j) - 1] -= pod.right_guassian_kernel(Y0[j]) * p
+        F[(N - 1) * (j - 1)] -= pod.left_guassian_kernel_combine(Y0[j]) * p
+        F[(N - 1) * (j) - 1] -= pod.right_guassian_kernel_combine(Y0[j]) * p
 
     F[: N - 1] -= np.dot(D, u0).T[0]
     F[(M - 1) * (N - 2) :] -= np.dot(D, un).T[0]

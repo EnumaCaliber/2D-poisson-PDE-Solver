@@ -177,3 +177,13 @@ def f_guassian_kernel_diffdis(x, y, c1, c2, sigma1, sigma2, b):
     return b * np.exp(
         -((x - c1) ** 2) / (2 * sigma1**2) - (y - c2) ** 2 / (2 * sigma2**2)
     )
+
+
+def f_guassian_kernel_combine_2(x, y, guassian_number=5):
+    f = 0
+    for i in range(guassian_number):
+        mu_x = np.random.uniform(0, 1)
+        mu_y = np.random.uniform(0, 1)
+        sigma = np.random.uniform(0.025, 0.15)  # 控制高斯宽度，防止太尖太宽
+        f += np.exp(-((x - mu_x) ** 2 + (y - mu_y) ** 2) / (2 * sigma**2))
+    return f
